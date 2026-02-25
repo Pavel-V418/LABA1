@@ -281,7 +281,6 @@ int main()
             printDoubleArray(array);
         }
     }
-    // return
     deleteDynamicArray(array);
     return 0;
 }
