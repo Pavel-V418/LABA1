@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 4.1)
-
 add_executable(LABA1_tests
         test.c
         ../dynamicArray.c
