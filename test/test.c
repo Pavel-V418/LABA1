@@ -1,4 +1,4 @@
-/*#include <assert.h>
+#include <assert.h>
 #include <stdio.h>
 #include "../dynamicArray.h"
 #include "../operations.h"
@@ -333,4 +333,4 @@ int main()
     printf("All tests passed successfully!\n");
 
     return 0;
-}*/
+}
