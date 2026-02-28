@@ -69,7 +69,7 @@ int main()
         type = getDoubleType();
 
     DYNAMIC_ARRAY *array =
-        createDynamicArray(type, 2);
+        createDynamicArray(type, 2);// без * и заменить create на init
     if (!array) {
         printf("Memory allocation failed\n");
         return 1;
@@ -280,7 +280,8 @@ int main()
             printf("\n");
             printDoubleArray(array);
         }
-    } // close while
+    } // while
     deleteDynamicArray(array);
     return 0;
-}// close main
+}// main
+// долбавить проверку на ввод(смог раобрать строку на вход и из нее получил корректный вывод)

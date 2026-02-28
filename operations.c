@@ -44,7 +44,7 @@ int bubbleSort(DYNAMIC_ARRAY* dynamic_array) {
     }
     free(swap);
     return was_swap;
-}
+}// enum для return значения
 
 DYNAMIC_ARRAY* map(const DYNAMIC_ARRAY *dynamic_array, FuncForMap function) {
     if (!dynamic_array || !function)
@@ -59,7 +59,7 @@ DYNAMIC_ARRAY* map(const DYNAMIC_ARRAY *dynamic_array, FuncForMap function) {
     }
     result_array->size = dynamic_array->size;
     return result_array;
-}
+} //не выделять памяти в операции. Получитьс снаружи дин массив. Возврат void
 
 DYNAMIC_ARRAY* where(const DYNAMIC_ARRAY *dynamic_array, Predicate p) {
     if (!dynamic_array || !p)
