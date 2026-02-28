@@ -271,7 +271,7 @@ int main()
 
             default:
                 printf("Wrong chose\n");
-        }
+        } // close cases
         if (typeChoice == 1) {
             printf("\n");
             printIntArray(array);
@@ -280,7 +280,7 @@ int main()
             printf("\n");
             printDoubleArray(array);
         }
-    }
+    } // close while
     deleteDynamicArray(array);
     return 0;
-}
+}// close main
