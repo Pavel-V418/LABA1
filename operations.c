@@ -4,7 +4,7 @@
 #include "string.h"
 
 
-void concat(DYNAMIC_ARRAY *result, const DYNAMIC_ARRAY *arr1, const DYNAMIC_ARRAY *arr2) {
+void concat(DYNAMIC_ARRAY *result,const DYNAMIC_ARRAY *arr1, const DYNAMIC_ARRAY *arr2) {
     if (!arr1 || !arr2 || !result)
         return;
     if (arr1->type != arr2->type)
@@ -47,7 +47,7 @@ SORT_SIGNAL bubbleSort(DYNAMIC_ARRAY* dynamic_array) {
     return SORT_COMPLETE;
 }
 
-void map(DYNAMIC_ARRAY *result_array, const DYNAMIC_ARRAY *dynamic_array, FuncForMap function) {
+void map(DYNAMIC_ARRAY *result_array ,const DYNAMIC_ARRAY *dynamic_array, FuncForMap function) {
     if (!dynamic_array || !function || !result_array)
         return;
     if (!initDynamicArray(result_array, dynamic_array->type, dynamic_array->size))
@@ -59,7 +59,8 @@ void map(DYNAMIC_ARRAY *result_array, const DYNAMIC_ARRAY *dynamic_array, FuncFo
     }
     result_array->size = dynamic_array->size;
 }
-void where(DYNAMIC_ARRAY *result, const DYNAMIC_ARRAY *dynamic_array, Predicate p) {
+
+void where(DYNAMIC_ARRAY *result,const DYNAMIC_ARRAY *dynamic_array, Predicate p) {
     if (!dynamic_array || !p || !result)
         return;
     if (!initDynamicArray(result, dynamic_array->type, dynamic_array->size))

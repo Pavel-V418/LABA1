@@ -192,14 +192,14 @@ int main()
 
                 if (typeChoice == 1)
                 {
-                    if (map(&result, &array, intMultiplyBy3))
-                        printIntArray(&result);
-                }
+                    map(&result, &array, intMultiplyBy3);
+                    printIntArray(&result);
+                }// int
                 else
                 {
-                    if (map(&result, &array, doubleMultiplyBy3))
-                        printDoubleArray(&result);
-                }
+                    map(&result, &array, doubleMultiplyBy3);
+                    printDoubleArray(&result);
+                }// double
 
                 freeDynamicArray(&result);
                 break;
@@ -209,15 +209,13 @@ int main()
             {
                 DYNAMIC_ARRAY result;
 
-                if (typeChoice == 1)
-                {
-                    if (map(&result, &array, intSquare))
-                        printIntArray(&result);
+                if (typeChoice == 1){
+                    map(&result, &array, intSquare);
+                    printIntArray(&result);
                 }
-                else
-                {
-                    if (map(&result, &array, doubleSquare))
-                        printDoubleArray(&result);
+                else{
+                    map(&result, &array, doubleSquare);
+                    printDoubleArray(&result);
                 }
 
                 freeDynamicArray(&result);
@@ -230,13 +228,13 @@ int main()
 
                 if (typeChoice == 1)
                 {
-                    if (where(&result, &array, positiveInt))
-                        printIntArray(&result);
+                    where(&result, &array, positiveInt);
+                    printIntArray(&result);
                 }
                 else
                 {
-                    if (where(&result, &array, positiveDouble))
-                        printDoubleArray(&result);
+                    where(&result, &array, positiveDouble);
+                    printDoubleArray(&result);
                 }
 
                 freeDynamicArray(&result);
@@ -280,18 +278,13 @@ int main()
 
                 DYNAMIC_ARRAY result;
 
-                if (concat(&result, &array, &second))
-                {
-                    if (typeChoice == 1)
-                        printIntArray(&result);
-                    else
-                        printDoubleArray(&result);
-
-                    freeDynamicArray(&result);
-                }
+                concat(&result, &array, &second);
+                if (typeChoice == 1)
+                    printIntArray(&result);
                 else
-                    printf("Concat failed\n");
+                    printDoubleArray(&result);
 
+                freeDynamicArray(&result);
                 freeDynamicArray(&second);
                 break;
             }
@@ -302,13 +295,17 @@ int main()
 
             default:
                 printf("Wrong choice\n");
-        }
+        } // switch
 
-        if (typeChoice == 1)
+        if (typeChoice == 1) {
+            printf("\n");
             printIntArray(&array);
-        else
+        }
+        else {
+            printf("\n");
             printDoubleArray(&array);
-    }
+        }
+    } // while
 
     freeDynamicArray(&array);
     return 0;
