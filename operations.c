@@ -4,27 +4,27 @@
 #include "string.h"
 
 
-DYNAMIC_ARRAY* concat(const DYNAMIC_ARRAY *arr1, const DYNAMIC_ARRAY *arr2) {
-    if (!arr1 || !arr2)
-        return NULL;
+int concat(DYNAMIC_ARRAY *result,const DYNAMIC_ARRAY *arr1, const DYNAMIC_ARRAY *arr2) {
+    if (!arr1 || !arr2 || !result)
+        return 0;
     if (arr1->type != arr2->type)
-        return NULL;
-    DYNAMIC_ARRAY* result = createDynamicArray(arr1->type, arr1->size + arr2->size);
-    if (!result)
-        return NULL;
-    memcpy(result->data, arr1->data, arr1->size * arr1->type->elementSize);
-    memcpy((char*)result->data + arr1->size * arr1->type->elementSize, arr2->data, arr2->size * arr2->type->elementSize);
+        return 0;
+    if (!initDynamicArray(result, arr1->type, arr1->size + arr2->size))
+        return 0;
+    size_t element_size = arr1->type->elementSize;
+    memcpy(result->data, arr1->data, arr1->size * element_size);
+    memcpy((char*)result->data + arr1->size * element_size, arr2->data,arr2->size * element_size);
     result->size = arr1->size + arr2->size;
-    return result;
+    return 1;
 }
 
-int bubbleSort(DYNAMIC_ARRAY* dynamic_array) {
+SORT_SIGNAL bubbleSort(DYNAMIC_ARRAY* dynamic_array) {
     if (!dynamic_array || dynamic_array->size < 2)
-        return 0;
+        return SORT_ERROR;
     size_t elementSize = dynamic_array->type->elementSize;
     void *swap = malloc(dynamic_array->type->elementSize);
     if (!swap)
-        return 0;
+        return SORT_ERROR;
     int was_swap = 0;
     for (size_t i =0; i < dynamic_array->size - 1; i++) {
         int cycle_swap = 0;
@@ -43,36 +43,36 @@ int bubbleSort(DYNAMIC_ARRAY* dynamic_array) {
             break;
     }
     free(swap);
-    return was_swap;
+    if (!was_swap)
+        return SORT_ALREADY_WAS;
+    return SORT_COMPLETE;
 }// enum для return значения
 
-DYNAMIC_ARRAY* map(const DYNAMIC_ARRAY *dynamic_array, FuncForMap function) {
-    if (!dynamic_array || !function)
-        return NULL;
-    DYNAMIC_ARRAY *result_array = createDynamicArray(dynamic_array->type, dynamic_array->size);
-    if (!result_array)
-        return NULL;
+int map(DYNAMIC_ARRAY *result_array ,const DYNAMIC_ARRAY *dynamic_array, FuncForMap function) {
+    if (!dynamic_array || !function || !result_array)
+        return 0;
+    if (!initDynamicArray(result_array, dynamic_array->type, dynamic_array->size))
+        return 0;
     for (size_t i = 0; i < dynamic_array->size; i++) {
         void *element_i = (char*)dynamic_array->data + i * dynamic_array->type->elementSize; // i-ый элемент из исходного массива
         void *dest = (char*)result_array->data + i * dynamic_array->type->elementSize; // адрес в новом массиве
         function(element_i, dest);
     }
     result_array->size = dynamic_array->size;
-    return result_array;
-} //не выделять памяти в операции. Получитьс снаружи дин массив. Возврат void
+    return 1;
+} //Возврат void
 
-DYNAMIC_ARRAY* where(const DYNAMIC_ARRAY *dynamic_array, Predicate p) {
-    if (!dynamic_array || !p)
-        return NULL;
-    DYNAMIC_ARRAY *result = createDynamicArray(dynamic_array->type, dynamic_array->size);
-    if (!result)
-        return NULL;
+int where(DYNAMIC_ARRAY *result,const DYNAMIC_ARRAY *dynamic_array, Predicate p) {
+    if (!dynamic_array || !p || !result)
+        return 0;
+    if (!initDynamicArray(result, dynamic_array->type, dynamic_array->size))
+        return 0;
     for (size_t i = 0; i < dynamic_array->size; i++) {
         void *element = (char*)dynamic_array->data + i * dynamic_array->type->elementSize;
         if (p(element)) {
             pushBack(result, element);
         }
     }
-    return result;
+    return 1;
 }
 

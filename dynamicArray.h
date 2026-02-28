@@ -11,8 +11,8 @@ typedef struct {
     const TYPE_INFO *type;
 }DYNAMIC_ARRAY;
 
-DYNAMIC_ARRAY* createDynamicArray(const TYPE_INFO *type, size_t initialCapacity);
-void deleteDynamicArray(DYNAMIC_ARRAY *dynamic_array);
+int initDynamicArray(DYNAMIC_ARRAY *dynamic_array, const TYPE_INFO *type, size_t initialCapacity);
+void freeDynamicArray(DYNAMIC_ARRAY *dynamic_array);
 int pushBack(DYNAMIC_ARRAY *dynamic_array, const void *element);
 int popBack(DYNAMIC_ARRAY *dynamic_array, void *save_data);
 void* getElement(DYNAMIC_ARRAY *dynamic_array, size_t index);

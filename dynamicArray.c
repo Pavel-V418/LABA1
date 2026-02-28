@@ -2,26 +2,28 @@
 #include <stdlib.h>
 #include <string.h>
 
-DYNAMIC_ARRAY* createDynamicArray(const TYPE_INFO *type, size_t initialCapacity) {
-    DYNAMIC_ARRAY* dynamic_array = malloc(sizeof(DYNAMIC_ARRAY));
-    if (!dynamic_array)
-        return NULL;
-    dynamic_array -> size = 0;
-    dynamic_array -> capacity = initialCapacity;
-    dynamic_array -> type = type;
-    dynamic_array -> data = malloc(initialCapacity * (type->elementSize));
+
+int initDynamicArray(DYNAMIC_ARRAY *dynamic_array, const TYPE_INFO *type, size_t initialCapacity) {
+    if (!dynamic_array || !type)
+        return 0;
+    dynamic_array->capacity = initialCapacity;
+    dynamic_array->type = type;
+    dynamic_array->size = 0;
+    dynamic_array -> data = malloc(initialCapacity * type->elementSize);
     if (!dynamic_array -> data) {
-        free(dynamic_array);
-        return NULL;
+        dynamic_array->capacity = 0;
+        return 0;
     }
-    return dynamic_array;
+    return 1;
 }
 
-void deleteDynamicArray(DYNAMIC_ARRAY *dynamic_array) {
+void freeDynamicArray(DYNAMIC_ARRAY *dynamic_array) {
     if (!dynamic_array)
         return;
     free(dynamic_array -> data);
-    free(dynamic_array);
+    dynamic_array->data = NULL;
+    dynamic_array->capacity = 0;
+    dynamic_array->size = 0;
 }
 
 int pushBack(DYNAMIC_ARRAY *dynamic_array, const void *element) {
@@ -49,7 +51,7 @@ int pushBack(DYNAMIC_ARRAY *dynamic_array, const void *element) {
 }
 
 int popBack(DYNAMIC_ARRAY *dynamic_array, void *save_data) {
-    if (!dynamic_array || dynamic_array->size == 0)
+    if (!dynamic_array || !save_data || dynamic_array->size == 0)
         return 0;
     void *dest = (char*)dynamic_array->data + (dynamic_array->size - 1) * dynamic_array->type->elementSize;
     memcpy(save_data, dest, dynamic_array->type->elementSize);
