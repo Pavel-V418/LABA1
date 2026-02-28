@@ -5,62 +5,52 @@
 #include "intType.h"
 #include "doubleType.h"
 
-void printIntArray(DYNAMIC_ARRAY *arr)
-{
+void printIntArray(DYNAMIC_ARRAY *arr){
     for (size_t i = 0; i < arr->size; i++)
         printf("%d ", *(int*)getElement(arr, i));
     printf("\n");
 }
 
-void printDoubleArray(DYNAMIC_ARRAY *arr)
-{
+void printDoubleArray(DYNAMIC_ARRAY *arr){
     for (size_t i = 0; i < arr->size; i++)
         printf("%.2f ", *(double*)getElement(arr, i));
     printf("\n");
 }
 
-void intMultiplyBy3(const void *src, void *dst)
-{
+void intMultiplyBy3(const void *src, void *dst){
     *(int*)dst = (*(int*)src) * 3;
 }
 
-void doubleMultiplyBy3(const void *src, void *dst)
-{
+void doubleMultiplyBy3(const void *src, void *dst){
     *(double*)dst = (*(double*)src) * 3;
 }
 
-void intSquare(const void *src, void *dst)
-{
+void intSquare(const void *src, void *dst){
     int x = *(int*)src;
     *(int*)dst = x * x;
 }
 
-void doubleSquare(const void *src, void *dst)
-{
+void doubleSquare(const void *src, void *dst){
     double x = *(double*)src;
     *(double*)dst = x * x;
 }
 
-int positiveInt(const void *e)
-{
+int positiveInt(const void *e){
     return *(int*)e > 0;
 }
 
-int positiveDouble(const void *e)
-{
+int positiveDouble(const void *e){
     return *(double*)e > 0.0;
 }
 
-int main()
-{
+int main(){
     int typeChoice;
 
     printf("Выберите тип массива:\n");
     printf("1 - int\n");
     printf("2 - double\n");
 
-    if (scanf("%d", &typeChoice) != 1 || (typeChoice != 1 && typeChoice != 2))
-    {
+    if (scanf("%d", &typeChoice) != 1 || (typeChoice != 1 && typeChoice != 2)){
         printf("Wrong type\n");
         return 1;
     }
@@ -73,16 +63,14 @@ int main()
 
     DYNAMIC_ARRAY array;
 
-    if (!initDynamicArray(&array, type, 2))
-    {
+    if (!initDynamicArray(&array, type, 2)){
         printf("Memory allocation failed\n");
         return 1;
     }
 
     int running = 1;
 
-    while (running)
-    {
+    while (running){
         printf("\n========== MENU ==========\n");
         printf("1. pushBack\n");
         printf("2. popBack\n");
@@ -103,19 +91,16 @@ int main()
             while (getchar() != '\n');
             continue;
         }
-        switch (choice)
-        {
+        switch (choice){
             case 1:
             {
-                if (typeChoice == 1)
-                {
+                if (typeChoice == 1){
                     int value;
                     printf("Enter int: ");
                     if (scanf("%d", &value) == 1)
                         pushBack(&array, &value);
                 }
-                else
-                {
+                else{
                     double value;
                     printf("Enter double: ");
                     if (scanf("%lf", &value) == 1)
@@ -126,16 +111,14 @@ int main()
 
             case 2:
             {
-                if (typeChoice == 1)
-                {
+                if (typeChoice == 1){
                     int removed;
                     if (popBack(&array, &removed))
                         printf("Removed: %d\n", removed);
                     else
                         printf("Array empty\n");
                 }
-                else
-                {
+                else{
                     double removed;
                     if (popBack(&array, &removed))
                         printf("Removed: %.2f\n", removed);
@@ -190,13 +173,11 @@ int main()
             {
                 DYNAMIC_ARRAY result;
 
-                if (typeChoice == 1)
-                {
+                if (typeChoice == 1){
                     map(&result, &array, intMultiplyBy3);
                     printIntArray(&result);
                 }// int
-                else
-                {
+                else{
                     map(&result, &array, doubleMultiplyBy3);
                     printDoubleArray(&result);
                 }// double
@@ -226,13 +207,11 @@ int main()
             {
                 DYNAMIC_ARRAY result;
 
-                if (typeChoice == 1)
-                {
+                if (typeChoice == 1){
                     where(&result, &array, positiveInt);
                     printIntArray(&result);
                 }
-                else
-                {
+                else{
                     where(&result, &array, positiveDouble);
                     printDoubleArray(&result);
                 }
@@ -244,31 +223,26 @@ int main()
             case 10:
             {
                 DYNAMIC_ARRAY second;
-                if (!initDynamicArray(&second, type, 2))
-                {
+                if (!initDynamicArray(&second, type, 2)){
                     printf("Memory error\n");
                     break;
                 }
 
                 int count;
                 printf("How many elements? ");
-                if (scanf("%d", &count) != 1)
-                {
+                if (scanf("%d", &count) != 1){
                     freeDynamicArray(&second);
                     break;
                 }
 
-                for (int i = 0; i < count; i++)
-                {
-                    if (typeChoice == 1)
-                    {
+                for (int i = 0; i < count; i++){
+                    if (typeChoice == 1){
                         int v;
                         printf("Enter int: ");
                         if (scanf("%d", &v) == 1)
                             pushBack(&second, &v);
                     }
-                    else
-                    {
+                    else{
                         double v;
                         printf("Enter double: ");
                         if (scanf("%lf", &v) == 1)
