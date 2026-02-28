@@ -107,7 +107,10 @@ void testMapInt()
     pushBack(&arr, &c);
 
     DYNAMIC_ARRAY mapped;
-    assert(map(&mapped, &arr, multiplyBy2));
+    map(&mapped, &arr, multiplyBy2);
+
+    assert(mapped.size == arr.size);
+    assert(*(int*)getElement(&mapped, 0) == 2);
 
     assert(mapped.size == 3);
     assert(*(int*)getElement(&mapped, 0) == 2);
@@ -131,7 +134,7 @@ void testWhereInt()
     pushBack(&arr, &d);
 
     DYNAMIC_ARRAY filtered;
-    assert(where(&filtered, &arr, isEven));
+    where(&filtered, &arr, isEven);
 
     assert(filtered.size == 2);
     assert(*(int*)getElement(&filtered, 0) == 2);
@@ -154,9 +157,10 @@ void testConcatInt()
     pushBack(&b, &y);
     pushBack(&b, &z);
 
-    assert(concat(&result, &a, &b));
+    concat(&result, &a, &b);
 
-    assert(result.size == 3);
+    assert(result.size == a.size + b.size);
+
     assert(*(int*)getElement(&result, 0) == 1);
     assert(*(int*)getElement(&result, 1) == 2);
     assert(*(int*)getElement(&result, 2) == 3);
@@ -238,7 +242,10 @@ void testMapDouble()
     pushBack(&arr, &b);
 
     DYNAMIC_ARRAY mapped;
-    assert(map(&mapped, &arr, multiplyDoubleBy2));
+    map(&mapped, &arr, multiplyDoubleBy2);
+
+    assert(mapped.size == arr.size);
+    assert(*(double*)getElement(&mapped, 0) == 3);
 
     assert(mapped.size == 2);
     assert(*(double*)getElement(&mapped, 0) == 3.0);
@@ -261,7 +268,7 @@ void testWhereDouble()
     pushBack(&arr, &d);
 
     DYNAMIC_ARRAY filtered;
-    assert(where(&filtered, &arr, isPositiveDouble));
+    where(&filtered, &arr, isPositiveDouble);
 
     assert(filtered.size == 2);
     assert(*(double*)getElement(&filtered, 0) == 2.0);
@@ -284,9 +291,9 @@ void testConcatDouble()
     pushBack(&b, &y);
     pushBack(&b, &z);
 
-    assert(concat(&result, &a, &b));
+    concat(&result, &a, &b);
 
-    assert(result.size == 3);
+    assert(result.size == a.size + b.size);
     assert(*(double*)getElement(&result, 0) == 1.1);
     assert(*(double*)getElement(&result, 1) == 2.2);
     assert(*(double*)getElement(&result, 2) == 3.3);
