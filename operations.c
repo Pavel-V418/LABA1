@@ -71,7 +71,6 @@ DYNAMIC_ARRAY* where(const DYNAMIC_ARRAY *dynamic_array, Predicate p) {
         void *element = (char*)dynamic_array->data + i * dynamic_array->type->elementSize;
         if (p(element)) {
             pushBack(result, element);
-            result->size++;
         }
     }
     return result;
