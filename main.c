@@ -65,8 +65,11 @@ int main()
         return 1;
     }
 
-    const TYPE_INFO *type =
-        (typeChoice == 1) ? getIntType() : getDoubleType();
+    const TYPE_INFO *type;
+    if (typeChoice == 1)
+        type = getIntType();
+    else
+        type = getDoubleType();
 
     DYNAMIC_ARRAY array;
 
@@ -96,9 +99,10 @@ int main()
         printf("Choice: ");
 
         int choice;
-        if (scanf("%d", &choice) != 1)
-            break;
-
+        if (scanf("%d", &choice) != 1) {
+            while (getchar() != '\n');
+            continue;
+        }
         switch (choice)
         {
             case 1:

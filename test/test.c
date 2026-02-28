@@ -29,7 +29,7 @@ int isPositiveDouble(const void *elem)
 
 /* ================= INT TESTS ================= */
 
-void testCreateAndPushInt()
+void testInitAndPushInt()
 {
     DYNAMIC_ARRAY arr;
     assert(initDynamicArray(&arr, getIntType(), 2));
@@ -168,7 +168,7 @@ void testConcatInt()
 
 /* ================= DOUBLE TESTS ================= */
 
-void testCreateAndPushDouble()
+void testInitAndPushDouble()
 {
     DYNAMIC_ARRAY arr;
     assert(initDynamicArray(&arr, getDoubleType(), 2));
@@ -298,14 +298,14 @@ void testConcatDouble()
 
 int main()
 {
-    testCreateAndPushInt();
+    testInitAndPushInt();
     testPopInt();
     testSortInt();
     testMapInt();
     testWhereInt();
     testConcatInt();
 
-    testCreateAndPushDouble();
+    testInitAndPushDouble();
     testPopDouble();
     testSortDouble();
     testMapDouble();
