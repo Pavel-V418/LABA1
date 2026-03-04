@@ -228,11 +228,11 @@ int main(){
 
             default:
                 printf("Wrong choice\n");
-        }// switch
+        } // switch
 
         printf("\n");
         printArray(&array);
-    }// while
+    } // while
     freeDynamicArray(&array);
     return 0;
 }
