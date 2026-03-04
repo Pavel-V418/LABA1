@@ -64,6 +64,7 @@ void* getElement(DYNAMIC_ARRAY *dynamic_array, size_t index) {
         return NULL;
     return (char*)dynamic_array->data + index * dynamic_array->type->elementSize;
 }
+
 void printArray(const DYNAMIC_ARRAY *dynamic_array){
     for (size_t i = 0; i < dynamic_array->size; i++)
     {
