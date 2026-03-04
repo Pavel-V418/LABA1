@@ -1,4 +1,5 @@
 #include "intType.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 typedef struct int_type{
@@ -15,12 +16,22 @@ int compareInt(const void *arg1, const void *arg2) {
     return 0;
 }
 
+void printInt(const void *elem) {
+    printf("%d", *(const int*)elem);
+}
+
+int setIntValue(void *elem) {
+    return scanf("%d", (int*)elem);
+}
+
 TYPE_INFO *intType = NULL;
 const TYPE_INFO* getIntType(void) {
     if (!intType) {
         intType = malloc(sizeof(TYPE_INFO));
         intType->elementSize = sizeof(INTEGER);
         intType->compare = compareInt;
+        intType->print = printInt;
+        intType->set_value = setIntValue;
     }
     return intType;
 }

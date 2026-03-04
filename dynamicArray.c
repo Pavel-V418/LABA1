@@ -1,7 +1,7 @@
 #include "dynamicArray.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdio.h>
 
 int initDynamicArray(DYNAMIC_ARRAY *dynamic_array, const TYPE_INFO *type, size_t initialCapacity) {
     if (!dynamic_array || !type)
@@ -63,4 +63,13 @@ void* getElement(DYNAMIC_ARRAY *dynamic_array, size_t index) {
     if (index >= dynamic_array->size)
         return NULL;
     return (char*)dynamic_array->data + index * dynamic_array->type->elementSize;
+}
+void printArray(const DYNAMIC_ARRAY *dynamic_array){
+    for (size_t i = 0; i < dynamic_array->size; i++)
+    {
+        void *elem = getElement(dynamic_array, i);
+        dynamic_array->type->print(elem);
+        printf(" ");
+    }
+    printf("\n");
 }

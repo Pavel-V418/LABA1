@@ -16,6 +16,7 @@ void freeDynamicArray(DYNAMIC_ARRAY *dynamic_array);
 int pushBack(DYNAMIC_ARRAY *dynamic_array, const void *element);
 int popBack(DYNAMIC_ARRAY *dynamic_array, void *save_data);
 void* getElement(DYNAMIC_ARRAY *dynamic_array, size_t index);
+void printArray(const DYNAMIC_ARRAY *dynamic_array);
 
 typedef void(*FuncForMap)(const void*, void*);
 typedef int (*Predicate)(const void*);

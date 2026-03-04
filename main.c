@@ -5,18 +5,6 @@
 #include "intType.h"
 #include "doubleType.h"
 
-void printIntArray(DYNAMIC_ARRAY *arr){
-    for (size_t i = 0; i < arr->size; i++)
-        printf("%d ", *(int*)getElement(arr, i));
-    printf("\n");
-}
-
-void printDoubleArray(DYNAMIC_ARRAY *arr){
-    for (size_t i = 0; i < arr->size; i++)
-        printf("%.2f ", *(double*)getElement(arr, i));
-    printf("\n");
-}
-
 void intMultiplyBy3(const void *src, void *dst){
     *(int*)dst = (*(int*)src) * 3;
 }
@@ -44,9 +32,10 @@ int positiveDouble(const void *e){
 }
 
 int main(){
+
     int typeChoice;
 
-    printf("Выберите тип массива:\n");
+    printf("Choose array type:\n");
     printf("1 - int\n");
     printf("2 - double\n");
 
@@ -55,22 +44,20 @@ int main(){
         return 1;
     }
 
-    const TYPE_INFO *type;
-    if (typeChoice == 1)
-        type = getIntType();
-    else
-        type = getDoubleType();
+    const TYPE_INFO *type =
+        (typeChoice == 1) ? getIntType() : getDoubleType();
 
     DYNAMIC_ARRAY array;
 
     if (!initDynamicArray(&array, type, 2)){
-        printf("Memory allocation failed\n");
+        printf("Memory error\n");
         return 1;
     }
 
     int running = 1;
 
     while (running){
+
         printf("\n========== MENU ==========\n");
         printf("1. pushBack\n");
         printf("2. popBack\n");
@@ -87,44 +74,35 @@ int main(){
         printf("Choice: ");
 
         int choice;
-        if (scanf("%d", &choice) != 1) {
+
+        if (scanf("%d", &choice) != 1){
             while (getchar() != '\n');
             continue;
         }
+
         switch (choice){
             case 1:
             {
-                if (typeChoice == 1){
-                    int value;
-                    printf("Enter int: ");
-                    if (scanf("%d", &value) == 1)
-                        pushBack(&array, &value);
-                }
-                else{
-                    double value;
-                    printf("Enter double: ");
-                    if (scanf("%lf", &value) == 1)
-                        pushBack(&array, &value);
-                }
+                char buffer[type->elementSize]; // временное место в памяти для записи значения
+
+                printf("Enter value: ");
+
+                if (type->set_value(buffer) == 1)
+                    pushBack(&array, buffer);
                 break;
             }
 
             case 2:
             {
-                if (typeChoice == 1){
-                    int removed;
-                    if (popBack(&array, &removed))
-                        printf("Removed: %d\n", removed);
-                    else
-                        printf("Array empty\n");
+                char buffer[type->elementSize];
+
+                if (popBack(&array, buffer)){
+                    printf("Removed: ");
+                    type->print(buffer);
+                    printf("\n");
                 }
-                else{
-                    double removed;
-                    if (popBack(&array, &removed))
-                        printf("Removed: %.2f\n", removed);
-                    else
-                        printf("Array empty\n");
-                }
+                else
+                    printf("Array empty\n");
                 break;
             }
 
@@ -132,6 +110,7 @@ int main(){
             {
                 size_t index;
                 printf("Index: ");
+
                 if (scanf("%zu", &index) != 1)
                     break;
 
@@ -139,11 +118,10 @@ int main(){
 
                 if (!elem)
                     printf("Wrong index\n");
-                else if (typeChoice == 1)
-                    printf("%d\n", *(int*)elem);
-                else
-                    printf("%.2f\n", *(double*)elem);
-
+                else{
+                    type->print(elem);
+                    printf("\n");
+                }
                 break;
             }
 
@@ -152,12 +130,11 @@ int main(){
                 SORT_SIGNAL r = bubbleSort(&array);
 
                 if (r == SORT_ERROR)
-                    printf("Null error\n");
+                    printf("Error\n");
                 else if (r == SORT_ALREADY_WAS)
                     printf("Already sorted\n");
                 else
                     printf("Sorted\n");
-
                 break;
             }
 
@@ -173,15 +150,12 @@ int main(){
             {
                 DYNAMIC_ARRAY result;
 
-                if (typeChoice == 1){
+                if (typeChoice == 1)
                     map(&result, &array, intMultiplyBy3);
-                    printIntArray(&result);
-                }// int
-                else{
+                else
                     map(&result, &array, doubleMultiplyBy3);
-                    printDoubleArray(&result);
-                }// double
 
+                printArray(&result);
                 freeDynamicArray(&result);
                 break;
             }
@@ -190,15 +164,12 @@ int main(){
             {
                 DYNAMIC_ARRAY result;
 
-                if (typeChoice == 1){
+                if (typeChoice == 1)
                     map(&result, &array, intSquare);
-                    printIntArray(&result);
-                }
-                else{
+                else
                     map(&result, &array, doubleSquare);
-                    printDoubleArray(&result);
-                }
 
+                printArray(&result);
                 freeDynamicArray(&result);
                 break;
             }
@@ -207,15 +178,12 @@ int main(){
             {
                 DYNAMIC_ARRAY result;
 
-                if (typeChoice == 1){
+                if (typeChoice == 1)
                     where(&result, &array, positiveInt);
-                    printIntArray(&result);
-                }
-                else{
+                else
                     where(&result, &array, positiveDouble);
-                    printDoubleArray(&result);
-                }
 
+                printArray(&result);
                 freeDynamicArray(&result);
                 break;
             }
@@ -223,40 +191,31 @@ int main(){
             case 10:
             {
                 DYNAMIC_ARRAY second;
+
                 if (!initDynamicArray(&second, type, 2)){
                     printf("Memory error\n");
                     break;
                 }
 
                 int count;
+
                 printf("How many elements? ");
+
                 if (scanf("%d", &count) != 1){
                     freeDynamicArray(&second);
                     break;
                 }
-
                 for (int i = 0; i < count; i++){
-                    if (typeChoice == 1){
-                        int v;
-                        printf("Enter int: ");
-                        if (scanf("%d", &v) == 1)
-                            pushBack(&second, &v);
-                    }
-                    else{
-                        double v;
-                        printf("Enter double: ");
-                        if (scanf("%lf", &v) == 1)
-                            pushBack(&second, &v);
-                    }
+                    char buffer[type->elementSize];
+                    printf("Enter value: ");
+                    if (type->set_value(buffer) == 1)
+                        pushBack(&second, buffer);
                 }
-
                 DYNAMIC_ARRAY result;
 
                 concat(&result, &array, &second);
-                if (typeChoice == 1)
-                    printIntArray(&result);
-                else
-                    printDoubleArray(&result);
+
+                printArray(&result);
 
                 freeDynamicArray(&result);
                 freeDynamicArray(&second);
@@ -269,18 +228,11 @@ int main(){
 
             default:
                 printf("Wrong choice\n");
-        } // switch
+        }// switch
 
-        if (typeChoice == 1) {
-            printf("\n");
-            printIntArray(&array);
-        }
-        else {
-            printf("\n");
-            printDoubleArray(&array);
-        }
-    } // while
-
+        printf("\n");
+        printArray(&array);
+    }// while
     freeDynamicArray(&array);
     return 0;
 }

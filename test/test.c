@@ -109,9 +109,6 @@ void testMapInt()
     DYNAMIC_ARRAY mapped;
     map(&mapped, &arr, multiplyBy2);
 
-    assert(mapped.size == arr.size);
-    assert(*(int*)getElement(&mapped, 0) == 2);
-
     assert(mapped.size == 3);
     assert(*(int*)getElement(&mapped, 0) == 2);
     assert(*(int*)getElement(&mapped, 1) == 6);
@@ -184,6 +181,9 @@ void testInitAndPushDouble()
     pushBack(&arr, &c);
 
     assert(arr.size == 3);
+    assert(*(double*)getElement(&arr,0) == 5.5);
+    assert(*(double*)getElement(&arr,1) == 1.1);
+    assert(*(double*)getElement(&arr,2) == 3.3);
 
     freeDynamicArray(&arr);
 }
@@ -243,9 +243,6 @@ void testMapDouble()
 
     DYNAMIC_ARRAY mapped;
     map(&mapped, &arr, multiplyDoubleBy2);
-
-    assert(mapped.size == arr.size);
-    assert(*(double*)getElement(&mapped, 0) == 3);
 
     assert(mapped.size == 2);
     assert(*(double*)getElement(&mapped, 0) == 3.0);

@@ -5,5 +5,7 @@
 
 int compareInt(const void *arg1, const void *arg2); // static
 const TYPE_INFO *getIntType(void);
+void printInt(const void *elem);
+int setIntValue(void *elem);
 
 #endif //LABA1_INTTYPE_H
