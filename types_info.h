@@ -9,10 +9,10 @@ typedef int (*SetValuePtr)(void *);
 
 typedef struct type_info{
     ComparePtr compare;
-    size_t elementSize;
+    size_t element_size;
     PrintPtr print;
     SetValuePtr set_value;
-}TYPE_INFO;
+}TypeInfo;
 
 
 #endif //LABA1_TYPES_INFO_H
