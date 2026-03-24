@@ -3,9 +3,12 @@
 
 #include "types_info.h"
 
-const TypeInfo *get_double_type(void);
-int compare_doubles(const void *arg1, const void *arg2);
-void print_double(const void *elem);
 int set_double_value(void *elem);
+int compare_doubles(const void *arg1, const void *arg2);
+
+const TypeInfo *get_double_type(void);
+
+void print_double(const void *elem);
+
 
 #endif //LABA1_DOUBLETYPE_H
