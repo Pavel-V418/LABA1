@@ -20,7 +20,7 @@ int pop_back(DynamicArray *dynamic_array, void *save_data);
 void free_dynamic_array(DynamicArray *dynamic_array);
 void print_array(const DynamicArray *dynamic_array);
 
-void* get_element(DynamicArray *dynamic_array, size_t index);
+void* get_element(const DynamicArray *dynamic_array, size_t index);
 
 typedef void(*FuncForMap)(const void*, void*);
 typedef int (*Predicate)(const void*);

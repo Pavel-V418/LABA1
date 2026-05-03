@@ -84,24 +84,10 @@ int pop_back(DynamicArray *dynamic_array, void *save_data) {
     return 1;
 }
 
-void* get_element(DynamicArray *dynamic_array, size_t index) {
+void* get_element(const DynamicArray *dynamic_array, size_t index) {
 
     if (index >= dynamic_array->size)
         return NULL;
 
     return (char*)dynamic_array->data + index * dynamic_array->type->element_size;
-}
-
-void print_array(const DynamicArray *dynamic_array){
-
-    for (size_t i = 0; i < dynamic_array->size; i++){
-
-        void *elem = get_element(dynamic_array, i);
-
-        dynamic_array->type->print(elem);
-
-        printf(" ");
-    }
-
-    printf("\n");
 }

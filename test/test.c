@@ -1,9 +1,11 @@
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "../dynamic_array.h"
 #include "../operations.h"
 #include "../int_type.h"
 #include "../double_type.h"
+#include "../dyn_array_type.h"
 
 /* ====== Вспомогательные функции ====== */
 
@@ -21,6 +23,39 @@ void multiply_double_by_2(const void *src, void *dst){
 
 int is_positive_double(const void *elem){
     return *(double*)elem > 0.0;
+}
+
+// map для массива массивов
+void map_inner_int_x2(const void *src, void *dst)
+{
+    DynamicArray *s = *(DynamicArray**)src;
+
+    DynamicArray *new_arr = malloc(sizeof(DynamicArray));
+    init_dynamic_array(new_arr, get_int_type(), s->size);
+
+    for (size_t i = 0; i < s->size; i++)
+    {
+        int *val = get_element(s, i);
+        int x = (*val) * 2;
+        push_back(new_arr, &x);
+    }
+
+    *(DynamicArray**)dst = new_arr;
+}
+
+// where для массива массивов
+int no_negative_elements(const void *elem)
+{
+    DynamicArray *arr = *(DynamicArray**)elem;
+
+    for (size_t i = 0; i < arr->size; i++)
+    {
+        int *value = get_element(arr, i);
+        if (*value < 0)
+            return 0;
+    }
+
+    return 1;
 }
 
 /* ================= INT TESTS ================= */
@@ -296,6 +331,268 @@ void test_concat_double(){
     free_dynamic_array(&result);
 }
 
+/* ================= ARRAY OF ARRAY TESTS ================= */
+
+void test_array_of_arrays_push()
+{
+    DynamicArray outer;
+    assert(init_dynamic_array(&outer, get_dyn_array_type(), 2));
+
+    DynamicArray *inner = malloc(sizeof(DynamicArray));
+    init_dynamic_array(inner, get_int_type(), 2);
+
+    int a = 1, b = 2;
+    push_back(inner, &a);
+    push_back(inner, &b);
+
+    push_back(&outer, &inner);
+
+    assert(outer.size == 1);
+
+    DynamicArray *res = *(DynamicArray**)get_element(&outer, 0);
+    assert(res->size == 2);
+    assert(*(int*)get_element(res, 0) == 1);
+    assert(*(int*)get_element(res, 1) == 2);
+
+    free_dynamic_array(inner);
+    free(inner);
+    free_dynamic_array(&outer);
+}
+
+void test_array_of_arrays_pop()
+{
+    DynamicArray outer;
+    assert(init_dynamic_array(&outer, get_dyn_array_type(), 2));
+
+    DynamicArray *inner1 = malloc(sizeof(DynamicArray));
+    init_dynamic_array(inner1, get_int_type(), 2);
+
+    int a = 1;
+    push_back(inner1, &a);
+
+    DynamicArray *inner2 = malloc(sizeof(DynamicArray));
+    init_dynamic_array(inner2, get_int_type(), 2);
+
+    int b = 2;
+    push_back(inner2, &b);
+
+    push_back(&outer, &inner1);
+    push_back(&outer, &inner2);
+
+    assert(outer.size == 2);
+
+    DynamicArray *removed;
+
+    assert(pop_back(&outer, &removed));
+    assert(outer.size == 1);
+
+    // проверяем, что вытащился именно inner2
+    assert(*(int*)get_element(removed, 0) == 2);
+
+    // чистим
+    free_dynamic_array(removed);
+    free(removed);
+
+    // ещё один pop
+    assert(pop_back(&outer, &removed));
+    assert(outer.size == 0);
+
+    assert(*(int*)get_element(removed, 0) == 1);
+
+    free_dynamic_array(removed);
+    free(removed);
+
+    assert(pop_back(&outer, &removed) == 0);
+
+    free_dynamic_array(&outer);
+}
+
+void test_array_of_arrays_sort()
+{
+    DynamicArray outer;
+    assert(init_dynamic_array(&outer, get_dyn_array_type(), 2));
+
+    // size = 3
+    DynamicArray *a = malloc(sizeof(DynamicArray));
+    init_dynamic_array(a, get_int_type(), 3);
+    int a1 = 1, a2 = 2, a3 = 3;
+    push_back(a, &a1);
+    push_back(a, &a2);
+    push_back(a, &a3);
+
+    // size = 1
+    DynamicArray *b = malloc(sizeof(DynamicArray));
+    init_dynamic_array(b, get_int_type(), 1);
+    int b1 = 10;
+    push_back(b, &b1);
+
+    // size = 2
+    DynamicArray *c = malloc(sizeof(DynamicArray));
+    init_dynamic_array(c, get_int_type(), 2);
+    int c1 = 5, c2 = 6;
+    push_back(c, &c1);
+    push_back(c, &c2);
+
+    push_back(&outer, &a);
+    push_back(&outer, &b);
+    push_back(&outer, &c);
+
+    bubble_sort(&outer);
+
+    DynamicArray *r0 = *(DynamicArray**)get_element(&outer, 0);
+    DynamicArray *r1 = *(DynamicArray**)get_element(&outer, 1);
+    DynamicArray *r2 = *(DynamicArray**)get_element(&outer, 2);
+
+    assert(r0->size == 1);
+    assert(r1->size == 2);
+    assert(r2->size == 3);
+
+    // очистка
+    free_dynamic_array(a); free(a);
+    free_dynamic_array(b); free(b);
+    free_dynamic_array(c); free(c);
+
+    free_dynamic_array(&outer);
+}
+
+void test_array_of_arrays_sort_already_sorted()
+{
+    DynamicArray outer;
+    assert(init_dynamic_array(&outer, get_dyn_array_type(), 2));
+
+    DynamicArray *a = malloc(sizeof(DynamicArray));
+    init_dynamic_array(a, get_int_type(), 1);
+    int x = 1;
+    push_back(a, &x);
+
+    DynamicArray *b = malloc(sizeof(DynamicArray));
+    init_dynamic_array(b, get_int_type(), 2);
+    int y1 = 1, y2 = 2;
+    push_back(b, &y1);
+    push_back(b, &y2);
+
+    push_back(&outer, &a);
+    push_back(&outer, &b);
+
+    SortSignal res = bubble_sort(&outer);
+
+    assert(res == SORT_ALREADY_SORTED);
+
+    free_dynamic_array(a); free(a);
+    free_dynamic_array(b); free(b);
+    free_dynamic_array(&outer);
+}
+
+void test_array_of_arrays_map()
+{
+    DynamicArray outer;
+    assert(init_dynamic_array(&outer, get_dyn_array_type(), 2));
+
+    DynamicArray *inner = malloc(sizeof(DynamicArray));
+    init_dynamic_array(inner, get_int_type(), 2);
+
+    int a = 2, b = 3;
+    push_back(inner, &a);
+    push_back(inner, &b);
+
+    push_back(&outer, &inner);
+
+    DynamicArray mapped;
+    map(&mapped, &outer, map_inner_int_x2);
+
+    DynamicArray *res = *(DynamicArray**)get_element(&mapped, 0);
+
+    assert(*(int*)get_element(res, 0) == 4);
+    assert(*(int*)get_element(res, 1) == 6);
+
+    free_dynamic_array(inner);
+    free(inner);
+    free_dynamic_array(res);
+    free(res);
+
+    free_dynamic_array(&outer);
+    free_dynamic_array(&mapped);
+}
+
+void test_array_of_arrays_where()
+{
+    DynamicArray outer;
+    assert(init_dynamic_array(&outer, get_dyn_array_type(), 2));
+
+    // good array
+    DynamicArray *a1 = malloc(sizeof(DynamicArray));
+    init_dynamic_array(a1, get_int_type(), 2);
+
+    int x1 = 1, x2 = 2;
+    push_back(a1, &x1);
+    push_back(a1, &x2);
+
+    // bad array
+    DynamicArray *a2 = malloc(sizeof(DynamicArray));
+    init_dynamic_array(a2, get_int_type(), 2);
+
+    int y1 = -1, y2 = 5;
+    push_back(a2, &y1);
+    push_back(a2, &y2);
+
+    push_back(&outer, &a1);
+    push_back(&outer, &a2);
+
+    DynamicArray filtered;
+    where(&filtered, &outer, no_negative_elements);
+
+    assert(filtered.size == 1);
+
+    DynamicArray *res = *(DynamicArray**)get_element(&filtered, 0);
+    assert(res->size == 2);
+
+    free_dynamic_array(a1);
+    free(a1);
+    free_dynamic_array(a2);
+    free(a2);
+
+    free_dynamic_array(&outer);
+    free_dynamic_array(&filtered);
+}
+
+void test_array_of_arrays_concat()
+{
+    DynamicArray a, b, result;
+
+    assert(init_dynamic_array(&a, get_dyn_array_type(), 2));
+    assert(init_dynamic_array(&b, get_dyn_array_type(), 2));
+
+    DynamicArray *inner1 = malloc(sizeof(DynamicArray));
+    init_dynamic_array(inner1, get_int_type(), 2);
+
+    int x = 1;
+    push_back(inner1, &x);
+
+    DynamicArray *inner2 = malloc(sizeof(DynamicArray));
+    init_dynamic_array(inner2, get_int_type(), 2);
+
+    int y = 2;
+    push_back(inner2, &y);
+
+    push_back(&a, &inner1);
+    push_back(&b, &inner2);
+
+    concat(&result, &a, &b);
+
+    assert(result.size == 2);
+
+    free_dynamic_array(inner1);
+    free(inner1);
+    free_dynamic_array(inner2);
+    free(inner2);
+
+    free_dynamic_array(&a);
+    free_dynamic_array(&b);
+    free_dynamic_array(&result);
+}
+
+
+
 int main(){
 
     test_init_and_push_int();
@@ -311,6 +608,14 @@ int main(){
     test_map_double();
     test_where_double();
     test_concat_double();
+
+    test_array_of_arrays_push();
+    test_array_of_arrays_pop();
+    test_array_of_arrays_sort();
+    test_array_of_arrays_sort_already_sorted();
+    test_array_of_arrays_map();
+    test_array_of_arrays_where();
+    test_array_of_arrays_concat();
 
     printf("All tests passed successfully!\n");
     return 0;

@@ -11,12 +11,17 @@ add_executable(LABA1 main.c
         dynamic_array.c
         operations.c
         types_info.h
+        dyn_array_type.c
+        dyn_array_type.h
+        dynamic_array_io.c
+        dynamic_array_io.h
 )
 add_executable(LABA1_tests
         test/test.c
         int_type.c
         double_type.c
         dynamic_array.c
+        dyn_array_type.c
         operations.c
         types_info.h
 )
