@@ -1,7 +1,6 @@
 #include "dynamic_array.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 int init_dynamic_array(DynamicArray *dynamic_array, const TypeInfo *type, size_t initial_capacity) {
 
