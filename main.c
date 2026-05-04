@@ -461,7 +461,7 @@ int main(void)
                 free_dynamic_array(&second);
 
                 if (typeChoice == 3)
-                    free_inner_array_elements(&second);
+                    destroy_inner_array_elements(&second);
 
                 break;
             }
@@ -479,7 +479,7 @@ int main(void)
     }
 
     if (typeChoice == 3)
-        free_inner_array_elements(&array);
+        destroy_inner_array_elements(&array);
 
     free_dynamic_array(&array);
     return 0;

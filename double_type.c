@@ -28,6 +28,8 @@ int set_double_value(void *elem) {
     return scanf("%lf", (double*)elem);
 }
 
+void destroy_double(void *elem) {}
+
 TypeInfo *double_type = NULL;
 
 const TypeInfo *get_double_type(void) {
@@ -36,10 +38,11 @@ const TypeInfo *get_double_type(void) {
 
         double_type = malloc(sizeof(TypeInfo));
 
-        double_type -> compare = compare_doubles;
-        double_type -> element_size = sizeof(DoubleType);
-        double_type -> print = print_double;
-        double_type -> set_value = set_double_value;
+        double_type->compare = compare_doubles;
+        double_type->element_size = sizeof(DoubleType);
+        double_type->print = print_double;
+        double_type->set_value = set_double_value;
+        double_type->destroy = destroy_double;
     }
 
     return double_type;

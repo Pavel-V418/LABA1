@@ -5,6 +5,7 @@
 
 int set_double_value(void *elem);
 int compare_doubles(const void *arg1, const void *arg2);
+void destroy_double(void *elem);
 
 const TypeInfo *get_double_type(void);
 

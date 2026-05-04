@@ -62,7 +62,7 @@ int set_dyn_array_value(void *dynamic_array) {
     return 1;
 }
 
-void free_inner_array_elements( void* arr ) { // удаление дин.массива, как элемента
+void destroy_inner_array_elements( void* arr ) { // удаление дин.массива, как элемента
     DynamicArray** ptr = ( DynamicArray** )arr;
     if ( *ptr != NULL ) {
         free_dynamic_array( *ptr );
@@ -82,6 +82,7 @@ const TypeInfo* get_dyn_array_type(void) {
         dyn_array_type->compare = compare_dyn_array;
         dyn_array_type->print = print_dyn_array;
         dyn_array_type->set_value = set_dyn_array_value;
+        dyn_array_type->destroy = destroy_inner_array_elements;
     }
 
     return dyn_array_type;
